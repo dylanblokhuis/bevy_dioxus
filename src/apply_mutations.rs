@@ -236,9 +236,9 @@ impl BevyTemplateNode {
                 attrs,
                 children,
             } => {
-                if *tag != "div" {
+                if *tag != "node" {
                     panic!(
-                        "Encountered unsupported bevy_dioxus tag `{tag}`. Only `div` is supported."
+                        "Encountered unsupported bevy_dioxus tag `{tag}`. Only `node` is supported."
                     );
                 }
                 Self::Node {

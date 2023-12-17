@@ -3,13 +3,15 @@ use bevy::{
     core::{DebugName, Name},
     core_pipeline::core_2d::Camera2dBundle,
     ecs::{entity::Entity, query::Without, system::Commands, world::World},
-    ui::{node_bundles::NodeBundle, Node},
-    DefaultPlugins,
+    ui::{node_bundles::NodeBundle, Node, BackgroundColor},
+    DefaultPlugins, render::color::Color,
 };
 use bevy_dioxus::{
     bevy_mod_picking::DefaultPickingPlugins, colors::*, dioxus::prelude::*, hooks::*,
     DioxusUiBundle, DioxusUiPlugin, DioxusUiRoot,
+    prelude::*
 };
+
 
 fn main() {
     App::new()
@@ -29,8 +31,9 @@ fn Editor(cx: Scope) -> Element {
     // TODO: When selected entity is despawned, need to reset this to None
     let selected_entity = use_state(cx, || Option::<Entity>::None);
 
+
     render! {
-        div {
+        node {
             width: "100vw",
             height: "100vh",
             justify_content: "space-between",
@@ -52,7 +55,7 @@ fn SceneTree<'a>(cx: Scope, selected_entity: &'a UseState<Option<Entity>>) -> El
     });
 
     render! {
-        div {
+        node {
             onclick: move |_| selected_entity.set(None),
             flex_direction: "column",
             if entities.is_empty() {
@@ -60,7 +63,7 @@ fn SceneTree<'a>(cx: Scope, selected_entity: &'a UseState<Option<Entity>>) -> El
             } else {
                 rsx! {
                     for (entity, name) in entities {
-                        div {
+                        node {
                             onclick: move |_| {
                                 if Some(entity) == ***selected_entity {
                                     selected_entity.set(None);
@@ -78,10 +81,10 @@ fn SceneTree<'a>(cx: Scope, selected_entity: &'a UseState<Option<Entity>>) -> El
                     }
                 }
             }
-            div {
+            node {
                 onclick: move |_| spawn_entity(),
                 padding: "8",
-                background_color: NEUTRAL_800,
+                background_color: BackgroundColor(Color::WHITE),
                 "Spawn Entity"
             }
         }
@@ -114,14 +117,14 @@ fn EntityInspector<'a>(cx: Scope, selected_entity: &'a UseState<Option<Entity>>)
             }
         } else {
             rsx! {
-                div {
+                node {
                     flex_direction: "column",
                     for (name, component_id, type_id, size) in components {
-                        div {
+                        node {
                             padding: "8",
                             background_color: NEUTRAL_800,
                             
-                            div {
+                            node {
                                 "Component: {name}"
                             }
                         }
